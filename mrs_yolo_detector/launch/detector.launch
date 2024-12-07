@@ -1,0 +1,33 @@
+<launch>
+
+  <arg name="UAV_NAME" default="$(optenv UAV_NAME uav1)" />
+
+  <arg name="camera_node" default="camera_down" />
+
+  <arg name="DEBUG" default="false" />
+  <arg unless="$(arg DEBUG)" name="launch_prefix_debug" value=""/>
+  <arg     if="$(arg DEBUG)" name="launch_prefix_debug" value="debug_roslaunch"/>
+
+  <arg name="standalone" default="true" />
+  <arg name="manager" default="$(arg UAV_NAME)_yolo_manager" />
+  <arg unless="$(arg standalone)" name="nodelet" value="load"/>
+  <arg     if="$(arg standalone)" name="nodelet" value="standalone"/>
+  <arg unless="$(arg standalone)" name="nodelet_manager" value="$(arg manager)"/>
+  <arg     if="$(arg standalone)" name="nodelet_manager" value=""/>
+
+  <group ns="$(arg UAV_NAME)">
+
+    <node pkg="nodelet" type="nodelet" name="mrs_yolo_detector" args="$(arg nodelet) mrs_yolo_detector/MrsYoloDetector $(arg nodelet_manager)" launch-prefix="$(arg launch_prefix_debug)" output="screen">
+
+      <rosparam file="$(find mrs_yolo_detector)/config/params.yaml" />
+
+      <remap from="~img_output" to="yolo/debug_img/image_raw" />
+      <remap from="~detections" to="yolo/detections" />
+      <remap from="~camera_input" to="$(arg camera_node)/image_raw" />
+      <remap from="~camera_info" to="$(arg camera_node)/camera_info" />
+
+    </node>
+
+  </group>
+
+</launch>

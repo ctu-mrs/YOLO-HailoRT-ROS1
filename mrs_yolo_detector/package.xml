@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+
+  <name>mrs_yolo_detector</name>
+  <version>1.0.0</version>
+  <description>YOLO object detector for HailoRT.</description>
+
+  <maintainer email="nekovfra@fel.cvut.cz">Frantisek Nekovar</maintainer>
+  <author email="nekovfra@fel.cvut.cz">Frantisek Nekovar</author>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>cmake_modules</depend>
+  <depend>roscpp</depend>
+  <depend>nodelet</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>mrs_msgs</depend>
+  <depend>vision_msgs</depend>
+  <depend>hailort_yolo_common</depend>
+  <depend>cvbridge</depend>
+  <depend>image_transport</depend>
+
+  <export>
+    <nodelet plugin="${prefix}/nodelets.xml" />
+  </export>
+
+</package>

@@ -1,0 +1,19 @@
+yolo_parameters:
+  model:
+    type: string
+    description: "Model filename in /hef directory."
+    default_value: "yolov10s.hef"
+  class_labels_path:
+    type: string
+    description: "Path to the class labels file."
+    default_value: ""
+  confidence:
+    type: double
+    description: "Confidence threshold."
+    default_value: 0.3
+  nms:
+    type: double
+    description: "NMS threshold."
+    default_value: 0.45
+control:
+  fps: 15

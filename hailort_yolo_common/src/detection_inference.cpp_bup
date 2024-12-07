@@ -31,8 +31,43 @@ hailo_status YoloHailoRT::init_device(
         std::cerr << "Failed creating vstreams " << vstreams_exp.status() << std::endl;
         return vstreams_exp.status();
     }
-    vstreams = std::make_shared<VStreams>(std::move(vstreams_exp.value()));
-    return HAILO_SUCCESS;
+    vstreams = std::make_shared<vstreams>(std::move(vstreams_exp.value()));
+
+
+  // Input VStream Params
+  auto input_vstream_params = network_group->make_input_vstream_params(QUANTIZED, FORMAT_TYPE, HAILO_DEFAULT_VSTREAM_TIMEOUT_MS, HAILO_DEFAULT_VSTREAM_QUEUE_SIZE);
+  //auto input_vstream_params = network_group->make_input_vstream_params(QUANTIZED, FORMAT_TYPE, HAILO_INFINITE, HAILO_DEFAULT_VSTREAM_QUEUE_SIZE);
+  if (!input_vstream_params){
+    std::cerr << "Failed to make input_vstream_params: " << input_vstream_params.status() ;
+    return input_vstream_params.status();
+  }
+
+  //Output VStream Params
+  auto output_vstream_params = network_group->make_output_vstream_params(QUANTIZED, FORMAT_TYPE, HAILO_DEFAULT_VSTREAM_TIMEOUT_MS, HAILO_DEFAULT_VSTREAM_QUEUE_SIZE);
+  if (!output_vstream_params){
+    std::cerr << "Failed to make output_vstream_params: ";
+    return output_vstream_params.status();
+  }
+
+  // Input VStream
+  auto input_vstreams_exp = VStreamsBuilder::create_input_vstreams(*network_group, input_vstream_params.value());
+  if (!input_vstreams_exp){
+    std::cerr << "Failed to create input_vstreams_exp: ";
+    return input_vstreams_exp.status();
+  }
+  // Output VStream
+  auto output_vstreams_exp = VStreamsBuilder::create_output_vstreams(*network_group, output_vstream_params.value());
+  if (!input_vstreams_exp or !output_vstreams_exp) {
+    std::cerr << "Failed to create output_vstreams_exp: ";
+    return input_vstreams_exp.status();
+  }
+  // Releasing Input/Output VStreams to Class memebers
+//  auto input_vstreams = input_vstreams_exp.release();
+//  auto output_vstreams = output_vstreams_exp.release();
+
+  vstreams = std::make_shared<VStreams>(std::move(input_vstreams_exp.value()), std::move(output_vstreams_exp.value()));
+
+  return HAILO_SUCCESS;
 }
 
 

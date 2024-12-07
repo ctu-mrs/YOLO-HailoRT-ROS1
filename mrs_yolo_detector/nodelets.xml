@@ -1,0 +1,5 @@
+<library path="lib/libMrsYoloDetector">
+  <class name="mrs_yolo_detector/MrsYoloDetector" type="mrs_yolo_detector::MrsYoloDetector" base_class_type="nodelet::Nodelet">
+    <description>MrsYoloDetector nodelet</description>
+  </class>
+</library>

@@ -3,22 +3,14 @@
 <package format="3">
   <name>hailort_yolo_common</name>
   <version>0.0.0</version>
-  <description>The hailort_yolo_common package</description>
-  <maintainer email="ray255ar@gmail.com">Ar-Ray-code</maintainer>
+  <description>The hailort_yolo_common package for mrs_yolo_detector.</description>
+  <maintainer email="nekovfra@fel.cvut.cz">Frantisek Nekovar</maintainer>
   <license>LGPL v2.1 License</license>
-  <author email="ray255ar@gmail.com">Ar-Ray-code</author>
+  <author email="nekovfra@fel.cvut.cz">Frantisek Nekovar</author>
 
-  <buildtool_depend>ament_cmake_auto</buildtool_depend>
-
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
   <depend>hailort</depend>
   <depend>libopencv-dev</depend>
 
-  <exec_depend>usb_cam</exec_depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
-
-  <export>
-    <build_type>ament_cmake</build_type>
-  </export>
 </package>

@@ -1,34 +1,67 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.0.2)
 project(hailort_yolo_common)
 
+## Set C++ standard
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
-find_package(ament_cmake_auto REQUIRED)
-ament_auto_find_build_dependencies()
+## Find catkin and any catkin packages
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  # Add other ROS packages you need here
+)
 
-find_package(Threads)
+## System dependencies are found with CMake's conventions
+find_package(Threads REQUIRED)
 find_package(HailoRT REQUIRED)
 find_package(OpenCV REQUIRED)
 
-ament_auto_add_library(${PROJECT_NAME} SHARED
+## Declare a catkin package
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp
+  DEPENDS OpenCV HailoRT
+)
+
+## Specify include directories
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+)
+
+## Declare a C++ library
+add_library(${PROJECT_NAME} SHARED
   src/yolo_hailortpp.cpp
   src/detection_inference.cpp
 )
-target_link_libraries(${PROJECT_NAME} Threads::Threads HailoRT::libhailort ${OpenCV_LIBS} stdc++fs)
-target_include_directories(${PROJECT_NAME} PUBLIC include ${OpenCV_INCLUDE_DIRS})
 
-ament_auto_add_executable(yolo_tiny
-  example/yolox_tiny.cpp
+## Specify libraries to link the library target against
+target_link_libraries(${PROJECT_NAME}
+  Threads::Threads
+  HailoRT::libhailort
+  ${OpenCV_LIBS}
+  stdc++fs
 )
-target_link_libraries(yolo_tiny ${PROJECT_NAME})
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+## Declare a C++ executable
+add_executable(yolo_tiny example/yolox_tiny.cpp)
+
+## Specify libraries to link the executable target against
+target_link_libraries(yolo_tiny
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
+
+## Add cmake target dependencies of the executable
+add_dependencies(yolo_tiny ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+## If testing is enabled, find testing dependencies
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  # Add any testing-related commands here
 endif()
-
-ament_auto_package()
